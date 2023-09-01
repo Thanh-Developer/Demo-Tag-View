@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mata.weather.live.myapplication.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,9 +46,21 @@ class MainActivity : AppCompatActivity() {
                 handleItemSelected(id, isChecked)
             })
 
-            rvTextValue.adapter = adapter
+            rcvDemo.adapter = adapter
+            rcvDemo.layoutManager =
+                LinearLayoutManagerWrapper(this@MainActivity, LinearLayoutManager.VERTICAL, false)
 
             adapter.addList(items)
+
+            adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                    binding.rcvDemo.scrollToPosition(0)
+                }
+
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    binding.rcvDemo.scrollToPosition(0)
+                }
+            })
         }
     }
 
@@ -55,15 +69,11 @@ class MainActivity : AppCompatActivity() {
         val layoutInflater = layoutInflater
         val tagView = layoutInflater.inflate(R.layout.item_tag_search, binding.root, false)
         val edtSearch = tagView.findViewById<AppCompatEditText>(R.id.edtSearch)
-        binding.tagLayout.addView(tagView)
+        binding.tagView.addView(tagView)
 
-        edtSearch.textChanges()
-            .debounce(500)
-            .distinctUntilChanged()
-            .mapLatest { searchKey ->
-                adapter.getFilter().filter(searchKey)
-            }
-            .launchIn(CoroutineScope(Dispatchers.Main))
+        edtSearch.textChanges().debounce(500).distinctUntilChanged().mapLatest { searchKey ->
+            adapter.getFilter().filter(searchKey)
+        }.launchIn(CoroutineScope(Dispatchers.Main))
     }
 
     private fun handleItemSelected(index: Int, isChecked: Boolean) {
@@ -74,10 +84,11 @@ class MainActivity : AppCompatActivity() {
         if (isChecked) {
             val tagTextView = tagView.findViewById<View>(R.id.tagTextView) as TextView
             tagTextView.text = items[index].content
-            binding.tagLayout.addView(tagView, binding.tagLayout.childCount - 1)
+            binding.tagView.addView(tagView, binding.tagView.childCount - 1)
 
             tagView.setOnClickListener {
                 handleRemoveTag(tagView.tag as Int)
+                notifyItemChanged(tagView.tag as Int)
             }
         } else {
             handleRemoveTag(tagView.tag as Int)
@@ -87,16 +98,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleRemoveTag(tag: Int) {
-        for (i in 0 until binding.tagLayout.childCount - 1) {
-            val view = binding.tagLayout.getChildAt(i)
+        for (i in 0 until binding.tagView.childCount - 1) {
+            val view = binding.tagView.getChildAt(i)
             if (tag == view.tag) {
-                binding.tagLayout.removeViewAt(i)
+                binding.tagView.removeViewAt(i)
                 items[tag].isSelected = false
-                adapter.submitList(items.toList())
-                // Have item header so we need + 1 when update ui
-                adapter.notifyItemChanged(tag + 1)
             }
         }
+    }
+
+    private fun notifyItemChanged(tag: Int) {
+        val index = adapter.itemFilter.indexOf(items[tag])
+        adapter.notifyItemChanged(index)
     }
 }
 

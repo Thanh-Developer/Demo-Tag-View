@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:paddingTop="8dp"
     android:paddingEnd="8dp">
 
@@ -12,7 +11,7 @@
         android:id="@+id/bgView"
         android:layout_width="0dp"
         android:layout_height="32dp"
-        android:background="@drawable/bg_pool_96"
+        android:background="@drawable/bg_tag_item"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/barrierEnd"
         app:layout_constraintStart_toStartOf="@+id/tagTextView"
@@ -34,7 +33,7 @@
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:layout_marginEnd="6dp"
-        android:src="@drawable/ic_close_button"
+        android:src="@drawable/ic_close"
         app:layout_constraintBottom_toBottomOf="@+id/tagTextView"
         app:layout_constraintStart_toEndOf="@+id/tagTextView"
         app:layout_constraintTop_toTopOf="@+id/tagTextView" />

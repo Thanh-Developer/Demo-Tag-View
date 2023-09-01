@@ -12,8 +12,8 @@ import java.util.stream.Collectors.toList
 class MultiSelectionAdapter(
     private val onItemClick: (Int, Boolean) -> Unit,
 ) : ListAdapter<ItemModel, MultiSelectionAdapter.ItemViewHolder>(DiffUtilItem()) {
-    private val itemFilter = ArrayList<ItemModel>()
-    private val items = ArrayList<ItemModel>()
+    val itemFilter = ArrayList<ItemModel>()
+    val items = ArrayList<ItemModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         return ItemViewHolder(
@@ -23,13 +23,8 @@ class MultiSelectionAdapter(
         )
     }
 
-
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.onBind(position)
-    }
-
-    override fun getItemCount(): Int {
-        return itemFilter.size
     }
 
     override fun submitList(list: List<ItemModel>?) {
@@ -83,11 +78,11 @@ class MultiSelectionAdapter(
 
                 cbSelect.setOnClickListener {
 
-                    val index = items.indexOf(itemFilter[layoutPosition])
+                    val index = items.indexOf(itemFilter[adapterPosition])
 
                     items[index].isSelected = cbSelect.isChecked
 
-                    itemFilter[layoutPosition].isSelected = cbSelect.isChecked
+                    itemFilter[adapterPosition].isSelected = cbSelect.isChecked
 
                     onItemClick.invoke(index, cbSelect.isChecked)
                 }

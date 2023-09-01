@@ -7,7 +7,7 @@
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <com.mata.weather.live.myapplication.CustomTagView
-        android:id="@+id/tagLayout"
+        android:id="@+id/tagView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
@@ -25,10 +25,10 @@
         android:background="#cccccc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tagLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/tagView" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTextValue"
+        android:id="@+id/rcvDemo"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#ECEFF1"

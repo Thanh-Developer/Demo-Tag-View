@@ -9,9 +9,7 @@ import android.view.WindowManager
 
 /**
  *
- * @var viewGroupWidth
  * We will arrange the views horizontally of the parent view
- *
  * Need to calculate the length of sortable views on a row.
  * We will add the views row by row from left to right
  * If the newly added view makes the length of the views in the same row
@@ -47,7 +45,7 @@ class CustomTagView @JvmOverloads constructor(
         var curTop: Int
         var maxHeight: Int
 
-        // Set new size of group after mearsure
+        // Set new size of group after measure
         viewGroupWidth = measuredWidth
 
         // Get the available size of child view
@@ -106,7 +104,7 @@ class CustomTagView @JvmOverloads constructor(
 
             // Measure the child.
             measureChild(child, widthMeasureSpec, heightMeasureSpec)
-            maxWidth += Math.max(maxWidth, child.measuredWidth)
+            maxWidth += maxWidth.coerceAtLeast(child.measuredWidth)
             mLeftWidth += child.measuredWidth
 
             // Some special case we have gap in the end of life so we need to recalculate size of list tag
@@ -115,17 +113,17 @@ class CustomTagView @JvmOverloads constructor(
                     maxHeight += child.measuredHeight
                     mLeftWidth = 0
                 } else {
-                    maxHeight = Math.max(maxHeight, child.measuredHeight)
+                    maxHeight = maxHeight.coerceAtLeast(child.measuredHeight)
                 }
             } else {
-                maxHeight = Math.max(maxHeight, child.measuredHeight)
+                maxHeight = maxHeight.coerceAtLeast(child.measuredHeight)
             }
             childState = combineMeasuredStates(childState, child.measuredState)
         }
 
         // Check against our minimum height and width
-        maxHeight = Math.max(maxHeight, suggestedMinimumHeight)
-        maxWidth = Math.max(maxWidth, suggestedMinimumWidth)
+        maxHeight = maxHeight.coerceAtLeast(suggestedMinimumHeight)
+        maxWidth = maxWidth.coerceAtLeast(suggestedMinimumWidth)
 
         // Report our final dimensions.
         setMeasuredDimension(
