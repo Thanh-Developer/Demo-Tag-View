@@ -71,13 +71,15 @@ class MainActivity : AppCompatActivity() {
         val edtSearch = tagView.findViewById<AppCompatEditText>(R.id.edtSearch)
         binding.tagView.addView(tagView)
 
-        edtSearch.textChanges().debounce(500).distinctUntilChanged().mapLatest { searchKey ->
+        edtSearch.textChanges()
+            .debounce(500)
+            .distinctUntilChanged()
+            .mapLatest { searchKey ->
             adapter.getFilter().filter(searchKey)
         }.launchIn(CoroutineScope(Dispatchers.Main))
     }
 
     private fun handleItemSelected(index: Int, isChecked: Boolean) {
-        val layoutInflater = layoutInflater
         val tagView = layoutInflater.inflate(R.layout.item_tag, binding.root, false)
         tagView.tag = index
 
